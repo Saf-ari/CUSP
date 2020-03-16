@@ -7,25 +7,26 @@ LINE ADDR CONTENTS SOURCE LINE
   6.  002 010001  	INB keyboard_data
   7.  003 000000  	STA $D00
   8.              	;need to check whether the d00 location is "get pwned" here
-  9.              	;if it does equal then jmp to end
- 10.  004 044001  	JMP poll_keybd
- 11.              	
- 12.              
+  9.              	;if it does equal then jmp to erase
+ 10.  004 044001  	NOP
+ 11.  005 110001  	JMP poll_keybd
+ 12.              	
  13.              
- 14.              erase:	.equ @, $000
- 15.  000 000FFF  	LDA# $FFF
- 16.  001 042000  	STA $000
- 17.  002 010001  	LDX# $001
- 18.  003 000000  	LDA# $000
- 19.  004 044001  	STA+ $001
- 20.  005 110001  	ADX# $001
- 21.  006 212000  	CMX $000
- 22.  007 482008  	JEQ end
- 23.              
+ 14.              
+ 15.              erase:	.equ @, $000
+ 16.  000 000FFF  	LDA# $FFF
+ 17.  001 042000  	STA $000
+ 18.  002 010001  	LDX# $001
+ 19.  003 000000  	LDA# $000
+ 20.  004 044001  	STA+ $001
+ 21.  005 110001  	ADX# $001
+ 22.  006 212000  	CMX $000
+ 23.  007 482008  	JEQ end
  24.              
- 25.  008 FFFFFF  end:	hlt
+ 25.              
+ 26.  008 FFFFFF  end:	hlt
 
                      SYMBOL TABLE CONTENTS
 
-000008 = END             000005 = ERASE           000001 = KEYBOARD_DATA   
+000008 = END             000006 = ERASE           000001 = KEYBOARD_DATA   
 000000 = KEYBOARD_STATUS 000000 = POLL_KEYBD      

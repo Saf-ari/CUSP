@@ -6,7 +6,8 @@ poll_keybd:	INB keyboard_status
 	INB keyboard_data
 	STA $D00
 	;need to check whether the d00 location is "get pwned" here
-	;if it does equal then jmp to end
+	;if it does equal then jmp to erase
+	NOP
 	JMP poll_keybd
 	
 
