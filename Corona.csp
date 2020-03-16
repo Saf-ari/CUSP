@@ -1,0 +1,7 @@
+	.equ keyboard_status, $000
+	.equ keyboard_data, $001
+
+poll_keybd:	INB keyboard_status
+	JGE poll_keybd
+	INB keyboard_data
+
