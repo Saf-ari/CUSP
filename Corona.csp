@@ -5,3 +5,16 @@ poll_keybd:	INB keyboard_status
 	JGE poll_keybd
 	INB keyboard_data
 
+
+erase:	.equ @, $000
+	LDA# $FFF
+	STA $000
+	LDX# $001
+	LDA# $000
+	STA+ $001
+	ADX# $001
+	CMX $000
+	JEQ end
+
+
+end:	hlt
