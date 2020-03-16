@@ -4,6 +4,11 @@
 poll_keybd:	INB keyboard_status
 	JGE poll_keybd
 	INB keyboard_data
+	STA $D00
+	;need to check whether the d00 location is "get pwned" here
+	;if it does equal then jmp to end
+	JMP poll_keybd
+	
 
 
 erase:	.equ @, $000
