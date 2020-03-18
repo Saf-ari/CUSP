@@ -1,16 +1,21 @@
+	.equ @, $000	
 	.equ keyboard_status, $000
 	.equ keyboard_data, $001
+
+
+
+	LDX# $001
 
 poll_keybd:	INB keyboard_status
 	JGE poll_keybd
 	INB keyboard_data
-	STA $D00
-	;need to check whether the d00 location is "get pwned" here
-	;if it does equal then jmp to erase
-	NOP
+	STA+ $D00
+	CMX# $009
+	JGE verify
+	ADX# $001
 	JMP poll_keybd
 	
-
+verify:
 
 erase:	.equ @, $000
 	LDA# $FFF
