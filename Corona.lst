@@ -1,19 +1,19 @@
 LINE ADDR CONTENTS SOURCE LINE
   1.              	.EQU KEYBOARD_STATUS, $000
   2.              	.EQU KEYBOARD_DATA, $001
-  3.  000 000FFF  	LDS# $D00	;set location
-  4.  001 042000  typeloop:	INB KEYBOARD_STATUS	
-  5.  002 010001  	JGE typeloop
-  6.  003 000000  	INB KEYBOARD_DATA
-  7.  004 044001  	PSHA
-  8.  005 110001  	CMA# $064	;check for end of password
-  9.  006 212000  	NOP
- 10.  007 482008  	JEQ verify	;jump to verify spelling
- 11.  008 FFFFFF  	JMP typeloop	;loop back
+  3.  000 020D00  	LDS# $D00	;set location
+  4.  001 702000  typeloop:	INB KEYBOARD_STATUS	
+  5.  002 4B2001  	JGE typeloop
+  6.  003 702001  	INB KEYBOARD_DATA
+  7.  004 FFF010  	PSHA
+  8.  005 200064  	CMA# $064	;check for end of password
+  9.  006 FFF038  	NOP
+ 10.  007 482009  	JEQ verify	;jump to verify spelling
+ 11.  008 402001  	JMP typeloop	;loop back
  12.  009 FFF013  verify: 	POPA		;load last letter typed
  13.  00A 200064  	CMA# $064	;check d
- 14.  00B 4D2001  	JGT typeloop
- 15.  00C 4A2001  	JLT typeloop
+ 14.  00B 4A2001  	JLT typeloop
+ 15.  00C 4D2001  	JGT typeloop
  16.  00D FFF013  	POPA
  17.  00E 200065  	CMA# $065	;check e
  18.  00F 4D2001  	JGT typeloop
@@ -24,8 +24,8 @@ LINE ADDR CONTENTS SOURCE LINE
  23.  014 4A2001  	JLT typeloop
  24.  015 FFF013  	POPA
  25.  016 200077  	CMA# $077	;check w
- 26.  017 4D2001  	JGT typeloop
- 27.  018 4A2001  	JLT typeloop
+ 26.  017 4A2001  	JLT typeloop
+ 27.  018 4D2001  	JGT typeloop
  28.  019 FFF013  	POPA
  29.  01A 200070  	CMA# $070	;check p
  30.  01B 4D2001  	JGT typeloop
@@ -43,21 +43,14 @@ LINE ADDR CONTENTS SOURCE LINE
  42.  027 4D2001  	JGT typeloop
  43.  028 4A2001  	JLT typeloop
  44.  029 010000  	LDX# 0
- 45.              
- 46.              erase:	.equ @, $000
- 47.  000 000FFF  	LDA# $FFF
- 48.  001 042000  	STA $000
- 49.  002 010001  	LDX# $001
- 50.  003 000000  	LDA# $000
- 51.  004 044001  	STA+ $001
- 52.  005 110001  	ADX# $001
- 53.  006 212000  	CMX $000
- 54.  007 482008  	JEQ end
- 55.              
- 56.              
- 57.  008 FFFFFF  end:	hlt
+ 45.  02A 000000  erase:	LDA# $000
+ 46.  02B 044000  	STA+ 0
+ 47.  02C 110001  	ADX# $001
+ 48.  02D 21002B  	CMX# $02B
+ 49.  02E 4A202A  	JLT erase
+ 50.  02F FFFFFF  	HLT
 
                      SYMBOL TABLE CONTENTS
 
-000008 = END             00002A = ERASE           000001 = KEYBOARD_DATA   
-000000 = KEYBOARD_STATUS 000001 = TYPELOOP        000009 = VERIFY          
+00002A = ERASE           000001 = KEYBOARD_DATA   000000 = KEYBOARD_STATUS 
+000001 = TYPELOOP        000009 = VERIFY          

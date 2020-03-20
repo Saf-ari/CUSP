@@ -11,8 +11,8 @@ typeloop:	INB KEYBOARD_STATUS
 	JMP typeloop	;loop back
 verify: 	POPA		;load last letter typed
 	CMA# $064	;check d
-	JGT typeloop
 	JLT typeloop
+	JGT typeloop
 	POPA
 	CMA# $065	;check e
 	JGT typeloop
@@ -23,8 +23,8 @@ verify: 	POPA		;load last letter typed
 	JLT typeloop
 	POPA
 	CMA# $077	;check w
-	JGT typeloop
 	JLT typeloop
+	JGT typeloop
 	POPA
 	CMA# $070	;check p
 	JGT typeloop
@@ -42,16 +42,9 @@ verify: 	POPA		;load last letter typed
 	JGT typeloop
 	JLT typeloop
 	LDX# 0
-
-erase:	.equ @, $000
-	LDA# $FFF
-	STA $000
-	LDX# $001
-	LDA# $000
-	STA+ $001
+erase:	LDA# $000
+	STA+ 0
 	ADX# $001
-	CMX $000
-	JEQ end
-
-
-end:	hlt
+	CMX# $02B
+	JLT erase
+	HLT
