@@ -1,37 +1,63 @@
 LINE ADDR CONTENTS SOURCE LINE
-  1.              	.equ @, $000	
-  2.              	.equ keyboard_status, $000
-  3.              	.equ keyboard_data, $001
-  4.              
-  5.              
-  6.              
-  7.  000 000FFF  	LDX# $001
-  8.              
-  9.  001 042000  poll_keybd:	INB keyboard_status
- 10.  002 010001  	JGE poll_keybd
- 11.  003 000000  	INB keyboard_data
- 12.  004 044001  	STA+ $D00
- 13.  005 110001  	CMX# $009
- 14.  006 212000  	JGE verify
- 15.  007 482008  	ADX# $001
- 16.  008 FFFFFF  	JMP poll_keybd
- 17.              	
- 18.              verify:
- 19.              
- 20.              erase:	.equ @, $000
- 21.  000 000FFF  	LDA# $FFF
- 22.  001 042000  	STA $000
- 23.  002 010001  	LDX# $001
- 24.  003 000000  	LDA# $000
- 25.  004 044001  	STA+ $001
- 26.  005 110001  	ADX# $001
- 27.  006 212000  	CMX $000
- 28.  007 482008  	JEQ end
- 29.              
- 30.              
- 31.  008 FFFFFF  end:	hlt
+  1.              	.EQU KEYBOARD_STATUS, $000
+  2.              	.EQU KEYBOARD_DATA, $001
+  3.  000 000FFF  	LDS# $D00	;set location
+  4.  001 042000  typeloop:	INB KEYBOARD_STATUS	
+  5.  002 010001  	JGE typeloop
+  6.  003 000000  	INB KEYBOARD_DATA
+  7.  004 044001  	PSHA
+  8.  005 110001  	CMA# $064	;check for end of password
+  9.  006 212000  	NOP
+ 10.  007 482008  	JEQ verify	;jump to verify spelling
+ 11.  008 FFFFFF  	JMP typeloop	;loop back
+ 12.  009 FFF013  verify: 	POPA		;load last letter typed
+ 13.  00A 200064  	CMA# $064	;check d
+ 14.  00B 4D2001  	JGT typeloop
+ 15.  00C 4A2001  	JLT typeloop
+ 16.  00D FFF013  	POPA
+ 17.  00E 200065  	CMA# $065	;check e
+ 18.  00F 4D2001  	JGT typeloop
+ 19.  010 4A2001  	JLT typeloop
+ 20.  011 FFF013  	POPA
+ 21.  012 20006E  	CMA# $06E	;check n
+ 22.  013 4D2001  	JGT typeloop
+ 23.  014 4A2001  	JLT typeloop
+ 24.  015 FFF013  	POPA
+ 25.  016 200077  	CMA# $077	;check w
+ 26.  017 4D2001  	JGT typeloop
+ 27.  018 4A2001  	JLT typeloop
+ 28.  019 FFF013  	POPA
+ 29.  01A 200070  	CMA# $070	;check p
+ 30.  01B 4D2001  	JGT typeloop
+ 31.  01C 4A2001  	JLT typeloop
+ 32.  01D FFF013  	POPA
+ 33.  01E 200074  	CMA# $074	;check t
+ 34.  01F 4D2001  	JGT typeloop
+ 35.  020 4A2001  	JLT typeloop
+ 36.  021 FFF013  	POPA
+ 37.  022 200065  	CMA# $065	;check e
+ 38.  023 4D2001  	JGT typeloop
+ 39.  024 4A2001  	JLT typeloop
+ 40.  025 FFF013  	POPA
+ 41.  026 200067  	CMA# $067	;check g
+ 42.  027 4D2001  	JGT typeloop
+ 43.  028 4A2001  	JLT typeloop
+ 44.  029 010000  	LDX# 0
+ 45.              
+ 46.              erase:	.equ @, $000
+ 47.  000 000FFF  	LDA# $FFF
+ 48.  001 042000  	STA $000
+ 49.  002 010001  	LDX# $001
+ 50.  003 000000  	LDA# $000
+ 51.  004 044001  	STA+ $001
+ 52.  005 110001  	ADX# $001
+ 53.  006 212000  	CMX $000
+ 54.  007 482008  	JEQ end
+ 55.              
+ 56.              
+ 57.  008 FFFFFF  end:	hlt
 
                      SYMBOL TABLE CONTENTS
 
-000008 = END             000009 = ERASE           000001 = KEYBOARD_DATA   
-000000 = KEYBOARD_STATUS 000001 = POLL_KEYBD      000009 = VERIFY          
+000008 = END             00002A = ERASE           000001 = KEYBOARD_DATA   
+000000 = KEYBOARD_STATUS 000001 = TYPELOOP        000009 = VERIFY          

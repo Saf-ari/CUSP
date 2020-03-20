@@ -9,22 +9,39 @@ typeloop:	INB KEYBOARD_STATUS
 	NOP
 	JEQ verify	;jump to verify spelling
 	JMP typeloop	;loop back
-verify: 	POPA
-	CMA# $064
-	JGT poll_keybd
-	JLT poll_keybd
+verify: 	POPA		;load last letter typed
+	CMA# $064	;check d
+	JGT typeloop
+	JLT typeloop
 	POPA
-	CMA# $065
-	JGT poll_keybd
-	JLT poll_keybd
+	CMA# $065	;check e
+	JGT typeloop
+	JLT typeloop
 	POPA
-	CMA# $06E
-	JGT poll_keybd
-	JLT poll_keybd
+	CMA# $06E	;check n
+	JGT typeloop
+	JLT typeloop
 	POPA
-	CMA# $077
-	JGT poll_keybd
-	JLT poll_keybd
+	CMA# $077	;check w
+	JGT typeloop
+	JLT typeloop
+	POPA
+	CMA# $070	;check p
+	JGT typeloop
+	JLT typeloop
+	POPA
+	CMA# $074	;check t
+	JGT typeloop
+	JLT typeloop
+	POPA
+	CMA# $065	;check e
+	JGT typeloop
+	JLT typeloop
+	POPA
+	CMA# $067	;check g
+	JGT typeloop
+	JLT typeloop
+	LDX# 0
 
 erase:	.equ @, $000
 	LDA# $FFF
