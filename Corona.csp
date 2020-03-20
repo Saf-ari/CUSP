@@ -1,21 +1,30 @@
-	.equ @, $000	
-	.equ keyboard_status, $000
-	.equ keyboard_data, $001
-
-
-
-	LDX# $001
-
-poll_keybd:	INB keyboard_status
-	JGE poll_keybd
-	INB keyboard_data
-	STA+ $D00
-	CMX# $009
-	JGE verify
-	ADX# $001
-	JMP poll_keybd
-	
-verify:
+	.EQU KEYBOARD_STATUS, $000
+	.EQU KEYBOARD_DATA, $001
+	LDS# $D00	;set location
+typeloop:	INB KEYBOARD_STATUS	
+	JGE typeloop
+	INB KEYBOARD_DATA
+	PSHA
+	CMA# $064	;check for end of password
+	NOP
+	JEQ verify	;jump to verify spelling
+	JMP typeloop	;loop back
+verify: 	POPA
+	CMA# $064
+	JGT poll_keybd
+	JLT poll_keybd
+	POPA
+	CMA# $065
+	JGT poll_keybd
+	JLT poll_keybd
+	POPA
+	CMA# $06E
+	JGT poll_keybd
+	JLT poll_keybd
+	POPA
+	CMA# $077
+	JGT poll_keybd
+	JLT poll_keybd
 
 erase:	.equ @, $000
 	LDA# $FFF
